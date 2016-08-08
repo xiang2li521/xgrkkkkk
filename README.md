@@ -1,47 +1,42 @@
-# 仿写知乎日报 iOS APP(转载和)
+《再造 “手机QQ” 侧滑菜单》系列文章代码仓库
+--
+
+###开发环境
+
+* Xcode 7.0+ / Swift 2.0+
+* 支持 Xcode 6 的[旧版本](https://github.com/johnlui/SwiftSideslipLikeQQ/releases/tag/v2.1)
+
+###文章链接
+
+####1. [再造 “手机QQ” 侧滑效果（一）——实现侧滑效果](http://lvwenhan.com/ios/445.html)
+实现效果：
+
+![pic](https://raw.githubusercontent.com/johnlui/SwiftSideslipLikeQQ/master/assets/274a1428736205.gif)
+
+####2. [再造 “手机QQ” 侧滑菜单（二）——高仿左视图](http://lvwenhan.com/ios/446.html)
+实现效果：
+
+![pic](https://raw.githubusercontent.com/johnlui/SwiftSideslipLikeQQ/master/assets/068a1428761914.gif)
+
+####3. [再造 “手机QQ” 侧滑菜单（三）——视图联动](http://lvwenhan.com/ios/447.html)
+实现效果：
+
+![pic](https://raw.githubusercontent.com/johnlui/SwiftSideslipLikeQQ/master/assets/8f171428840820.gif)
+
+###番外篇：【再造 “手机QQ” 侧滑菜单（四）——增加 TabBar】较简单不再成文。
+实现效果：
+
+![pic](https://raw.githubusercontent.com/johnlui/SwiftSideslipLikeQQ/master/assets/9.gif)
 
 
-## 编译环境:  
-Xcode 7.0以上  
-iOS 9.0以上
+有问题请直接在文章下面留言。
 
-## 运行效果
-![](https://github.com/hshpy/ZhiHuDaily-2.0/blob/master/zhihu.gif)
+<br>
+> ####喜欢此系列文章可以点击上面右侧的 Star 哦，变成 Unstar 就可以了！ :stuck_out_tongue_winking_eye:
 
-## 部分实现过程
+<br>
 
-设计模式：MVVM（转载）
+### License
 
-***
-
-顶部的轮播视图采用最常见的做法，就是在原数组的前后再插入一个元素，例5,1,2,3,4,5,1,然后通过改变collectionview的contentoffset属性。
-
-***
-
-轮播视图里面有一层渐变图层，如果调用addSubLayer方法把CAGradientLayer的实例加入的话，当我们下拉刷新时会触发景深效果会改变图层的bounds属性(动画属性)，苹果**只对子图层的动画属性改变自动会触发隐式动画**，动画效果造成与我们下拉时不一致不协调；既然添加子图层没办法，那就往根图层想办法了，每个UIView的实例都一个CALayer的实例作为根图层，CAGradientLayer又是CALayer的子类,所以新建一个CoverView继承UIView重写下面方法，这样CoverView的实例的根图层就是渐变图层了，改变bounds也不会触发隐式动画。
-
-	+ (Class)layerClass {
-	    return [CAGradientLayer class];
-	}
-
-***
-
-为了配合实现景深效果，UITableView加入了一个透明的tableHeaderView，这样导致了后面轮播视图的事件响应都失效了，hitTest视图都是tableview，所以给UITableview写个category添加了个disableTableHeaderView属性来判断是否响应tableviewHeaderView的事件。
-
-	- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-	   if (self.disableTableHeaderView) {
-	       CGRect frame = self.tableHeaderView.frame;
-	       if (CGRectContainsPoint(frame, point)) {
-	           return NO;
-	       }
-	   }
-	   return YES;
-	}
-
-
-***
-
-因为官方后台接口给的图像大小是150*150,但是官方app的cell里面的image并非正方形，可见出经过处理的，同时cell里面的subview也不用响应事件，所以项目里的UITableViewCell都是采用直接给cell.contentView.layer.contents赋值一张画好的CGImage，快速滑动时接近60fps。
-
-***
-
+本项目采用 [MIT license](http://opensource.org/licenses/MIT) 开源，你可以利用采用该协议的代码做任何事情，只需要保留源码中的版权声明即可。
+本次上传的侧滑菜单是转载的，本人还写不出来哦。
